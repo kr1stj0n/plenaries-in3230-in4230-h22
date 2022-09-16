@@ -1,4 +1,4 @@
-# Git repo of the fall semester of IN3230/IN4230 course at IFI-UiO #
+# The Git repository of IN3230/IN4230 - Høst 2022 course at IFI-UiO #
 
 This is the main repository of the Plenaries of IN3230/4230 - Høst 2022 course at the
 University of Oslo.
