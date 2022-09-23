@@ -8,7 +8,8 @@ code examples live coded and discussed during the sessions.
 ## Sessions ##
 
   1. Plenary 1: [p1_16-09-2022](p1_16-09-2022/)
-  2. 
+  2. Plenary 2: [p2_23-09-2022](p2_23-09-2022/)
+  3. 
 
 ## Info ##
 
