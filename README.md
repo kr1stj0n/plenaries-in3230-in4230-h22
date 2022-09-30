@@ -9,7 +9,8 @@ code examples live coded and discussed during the sessions.
 
   1. Plenary 1: [p1_16-09-2022](p1_16-09-2022/)
   2. Plenary 2: [p2_23-09-2022](p2_23-09-2022/)
-  3. 
+  3. Plenary 3: [p3_30-09-2022](p3_30-09-2022/)
+  4. 
 
 ## Info ##
 
