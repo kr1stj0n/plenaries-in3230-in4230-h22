@@ -14,7 +14,7 @@ We first talked about UNIX sockets and checked the implementation of a
 client/server chat application that uses such sockets to send data. UNIX sockets
 will be use as the interface between the Ping applications and MIP daemons.
 Check the code example
-[here](https://github.com/kr1stj0n/plenaries-in3230-in4230-h21/tree/main/p2_23-09-2022/unix_sockets).
+[here](https://github.com/kr1stj0n/plenaries-in3230-in4230-h22/tree/main/p2_23-09-2022/unix_sockets).
 
 ## epoll() ##
 
