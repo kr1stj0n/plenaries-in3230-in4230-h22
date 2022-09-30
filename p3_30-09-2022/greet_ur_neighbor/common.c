@@ -2,8 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ifaddrs.h>		/* getifaddrs */
-#include <linux/if_packet.h>    /* AF_PACKET  */
-#include <arpa/inet.h>          /* htons      */
+#include <arpa/inet.h>		/* htons      */
 #include <stdint.h>
 
 #include "common.h"
@@ -163,14 +162,19 @@ int handle_arp_packet(struct ifs_data *ifs)
 		/* Handling an ARP request */
                 printf("\nWe got a hand offer from neighbor: ");
                 print_mac_addr(frame_hdr.src_addr, 6);
+
+                /* print the if_index of the receiving interface */
+                printf("We received an incoming packet from iface with index %d\n",
+                       so_name.sll_ifindex);
+                
                 rc = send_arp_response(ifs, &so_name, frame_hdr);
                 if (rc < 0)
                         perror("send_arp_response");
         }
 
-	/* Node received an ARP Reply */
-	printf("\nHello from neighbor ");
-	print_mac_addr(frame_hdr.src_addr, 6);
+        /* Node received an ARP Reply */
+        printf("\nHello from neighbor ");
+        print_mac_addr(frame_hdr.src_addr, 6);
 
         return rc;
 }
@@ -219,7 +223,7 @@ int send_arp_response(struct ifs_data *ifs, struct sockaddr_ll *so_name,
         printf("Nice to meet you ");
         print_mac_addr(frame.dst_addr, 6);
 
-	printf("I am ");
+        printf("I am ");
         print_mac_addr(frame.src_addr, 6);
 
         /* Remember that we allocated this on the heap; free it */

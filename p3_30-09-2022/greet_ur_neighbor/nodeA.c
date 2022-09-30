@@ -13,59 +13,59 @@
 
 int main(int argc, char *argv[])
 {
-	struct ifs_data local_if;
-	int    raw_sock, rc;
+        struct ifs_data local_if;
+        int    raw_sock, rc;
 
-	struct epoll_event ev, events[MAX_EVENTS];
-	int epollfd;
+        struct epoll_event ev, events[MAX_EVENTS];
+        int epollfd;
 
-	/* Set up a raw AF_PACKET socket without ethertype filtering */
-	raw_sock = create_raw_socket();
+        /* Set up a raw AF_PACKET socket without ethertype filtering */
+        raw_sock = create_raw_socket();
 
-	/* Initialize interface data and store the interface metadata (MAC addr.
-	 * interface index, etc.) to local_if
-	 */
-	init_ifs(&local_if, raw_sock);
+        /* Initialize interface data and store the interface metadata (MAC addr.
+         * interface index, etc.) to local_if
+         */
+        init_ifs(&local_if, raw_sock);
 
-	/* Create epoll table */
-	epollfd = epoll_create1(0);
-	if (epollfd == -1) {
-		perror("epoll_create1");
-		exit(EXIT_FAILURE);
-	}
+        /* Create epoll table */
+        epollfd = epoll_create1(0);
+        if (epollfd == -1) {
+                perror("epoll_create1");
+                exit(EXIT_FAILURE);
+        }
 
-	/* Add RAW socket to epoll table */
-	ev.events = EPOLLIN;
-	ev.data.fd = raw_sock;
-	if (epoll_ctl(epollfd, EPOLL_CTL_ADD, raw_sock, &ev) == -1) {
-		perror("epoll_ctl: raw_sock");
-		exit(EXIT_FAILURE);
-	}
+        /* Add RAW socket to epoll table */
+        ev.events = EPOLLIN;
+        ev.data.fd = raw_sock;
+        if (epoll_ctl(epollfd, EPOLL_CTL_ADD, raw_sock, &ev) == -1) {
+                perror("epoll_ctl: raw_sock");
+                exit(EXIT_FAILURE);
+        }
 
-	/* Introduce yourself */
-	printf("\n<%s> Hi! I am %s with MAC ", argv[0], argv[0]);
-	print_mac_addr(local_if.addr[0].sll_addr, 6);
+        /* Introduce yourself */
+        printf("\n<%s> Hi! I am %s with MAC ", argv[0], argv[0]);
+        print_mac_addr(local_if.addr[0].sll_addr, 6);
 
-	/* Send ARP request to know the neighbor next door */
-	send_arp_request(&local_if);
+        /* Send ARP request to know the neighbor next door */
+        send_arp_request(&local_if);
 
-	while(1) {
-		rc = epoll_wait(epollfd, events, MAX_EVENTS, -1);
-		if (rc == -1) {
-			perror("epoll_wait");
-			exit(EXIT_FAILURE);
-		} else if (events->data.fd == raw_sock) {
-			printf("<info> The neighbor is responding to the handshake\n");
-			rc = handle_arp_packet(&local_if);
-			if (rc < 1) {
-				perror("handle_arp_packet");
-				exit(EXIT_FAILURE);
-			}
-		}
-		break;
-	}
+        while(1) {
+                rc = epoll_wait(epollfd, events, MAX_EVENTS, -1);
+                if (rc == -1) {
+                        perror("epoll_wait");
+                        exit(EXIT_FAILURE);
+                } else if (events->data.fd == raw_sock) {
+                        printf("<info> The neighbor is responding to the handshake\n");
+                        rc = handle_arp_packet(&local_if);
+                        if (rc < 1) {
+                                perror("handle_arp_packet");
+                                exit(EXIT_FAILURE);
+                        }
+                }
+                break;
+        }
 
-	close(raw_sock);
+        close(raw_sock);
 
-	return 0;
+        return 0;
 }
