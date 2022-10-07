@@ -1,8 +1,8 @@
 #ifndef _COMMON_H
 #define _COMMON_H
 
-#include <stdint.h>				/* uint8_t */
-#include <unistd.h>				/* size_t */
+#include <stdint.h>		/* uint8_t */
+#include <unistd.h>		/* size_t */
 #include <linux/if_packet.h>	/* struct sockaddr_ll */
 
 #define MAX_EVENTS 10

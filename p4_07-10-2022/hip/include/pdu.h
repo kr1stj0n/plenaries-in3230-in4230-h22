@@ -1,0 +1,29 @@
+#ifndef PDU_H_
+#define PDU_H_
+
+#include <stdint.h>
+#include <stddef.h>
+
+#include "ether.h"
+#include "hip.h"
+
+#define HIP_HDR_LEN	sizeof(struct hip_hdr)
+
+struct pdu {
+	struct eth_hdr *ethhdr;
+	struct hip_hdr *hiphdr;
+	uint8_t        *sdu;
+} __attribute__((packed));
+
+struct pdu * alloc_pdu(void);
+void fill_pdu(struct pdu *pdu,
+	      uint8_t *src_mac_addr,
+	      uint8_t *dst_mac_addr,
+	      uint8_t src_hip_addr,
+	      uint8_t dst_hip_addr,
+	      const char *sdu);
+size_t hip_serialize_pdu(struct pdu *, uint8_t *);
+size_t hip_deserialize_pdu(struct pdu *, uint8_t *);
+void destroy_pdu(struct pdu *);
+
+#endif /* PDU_H_ */
