@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
@@ -6,6 +7,7 @@
 #include "ether.h"
 #include "hip.h"
 #include "pdu.h"
+#include "utils.h"
 
 struct pdu * alloc_pdu(void)
 {
@@ -92,16 +94,13 @@ size_t hip_serialize_pdu(struct pdu *pdu, uint8_t *snd_buf)
 
 size_t hip_deserialize_pdu(struct pdu *pdu, uint8_t *rcv_buf)
 {
-	pdu = (struct pdu *)malloc(sizeof(struct pdu));
-
+	/* pdu = (struct pdu *)malloc(sizeof(struct pdu)); */
 	size_t rcv_len = 0;
 
 	/* Unpack ethernet header */
 	pdu->ethhdr = (struct eth_hdr *)malloc(ETH_HDR_LEN);
 	memcpy(pdu->ethhdr, rcv_buf + rcv_len, ETH_HDR_LEN);
-	rcv_len += ETH_HDR_LEN;
-
-	
+	rcv_len += ETH_HDR_LEN;	
 
 	pdu->hiphdr = (struct hip_hdr *)malloc(HIP_HDR_LEN);
 	uint32_t *tmp = (uint32_t *) (rcv_buf + rcv_len);
@@ -113,13 +112,31 @@ size_t hip_deserialize_pdu(struct pdu *pdu, uint8_t *rcv_buf)
 	pdu->hiphdr->type = (uint8_t) (header & 0xf);
 	rcv_len += HIP_HDR_LEN;
 		
-	pdu->sdu = (uint8_t *) calloc(1, pdu->hiphdr->len * 4);
-	memcpy(pdu->sdu, rcv_buf + rcv_len, pdu->hiphdr->len);
-	rcv_len += pdu->hiphdr->len;
+	pdu->sdu = (uint8_t *)calloc(1, pdu->hiphdr->len * 4);
+	memcpy(pdu->sdu, rcv_buf + rcv_len, pdu->hiphdr->len * 4);
+	rcv_len += pdu->hiphdr->len * 4;
 
 	return rcv_len;
 }
 
+void print_pdu_content(struct pdu *pdu)
+{
+	printf("====================================================\n");
+	printf("\t Source MAC address: ");
+	print_mac_addr(pdu->ethhdr->src_mac, 6);
+	printf("\t Destination MAC address: ");
+	print_mac_addr(pdu->ethhdr->dst_mac, 6);
+	printf("\t Ethertype: 0x%04x\n", pdu->ethhdr->ethertype);
+
+	printf("\t Source HIP address: %u\n", pdu->hiphdr->src);
+	printf("\t Destination HIP address: %u\n", pdu->hiphdr->dst);
+	printf("\t HIP protocol version: %u\n", pdu->hiphdr->version);
+	printf("\t SDU length: %d\n", pdu->hiphdr->len * 4);
+	printf("\t PDU type: 0x%02x\n", pdu->hiphdr->type);
+
+	printf("\t SDU: %s\n", pdu->sdu);
+	printf("====================================================\n");
+}
 
 void destroy_pdu(struct pdu *pdu)
 {

@@ -22,6 +22,6 @@ int create_raw_socket(void);
 int epoll_add_sock(int);
 int send_hip_packet(struct ifs_data *, uint8_t *, uint8_t *, uint8_t, uint8_t,
 		    const char *);
-int handle_hip_packet(struct ifs_data *);
+int handle_hip_packet(struct ifs_data *, const char *);
 
 #endif /* _UTILS_H */

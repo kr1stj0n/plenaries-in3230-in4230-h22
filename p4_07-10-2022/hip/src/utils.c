@@ -134,12 +134,13 @@ int send_hip_packet(struct ifs_data *ifs,
 		    const char *sdu)
 {
 	struct pdu *pdu = alloc_pdu();
+	uint8_t snd_buf[MAX_BUF_SIZE];
+	
 	if (NULL == pdu)
 		return -ENOMEM;
 
 	fill_pdu(pdu, src_mac_addr, dst_mac_addr, src_hip_addr, dst_hip_addr, sdu);
 
-	uint8_t snd_buf[1024];
 	size_t snd_len = hip_serialize_pdu(pdu, snd_buf);
 
 	/* Send the serialized buffer via RAW socket */
@@ -150,47 +151,40 @@ int send_hip_packet(struct ifs_data *ifs,
 		close(ifs->rsock);
 	}
 
+	printf("Sending PDU with content (size %zu):\n", snd_len);
+	print_pdu_content(pdu);
+
 	destroy_pdu(pdu);
 	return 0;
 }
 
-int handle_hip_packet(struct ifs_data *ifs)
+int handle_hip_packet(struct ifs_data *ifs, const char *app_mode)
 {
-	/* struct sockaddr_ll  so_name; */
-	/* struct ether_frame  frame_hdr; */
-	/* struct hello_header hello_hdr; */
-	/* struct msghdr       msg = {0}; */
-	/* struct iovec        msgvec[3]; */
-	/* uint8_t             packet[256]; */
-	/* int                 rc; */
-	struct pdu *pdu = NULL;
-	uint8_t rcv_buf[1024];
-
-	socklen_t sock_len = sizeof(struct sockaddr_ll);
+	struct pdu *pdu = (struct pdu *)malloc(sizeof(struct pdu));
+	if (NULL == pdu) {
+		perror("malloc");
+		return -ENOMEM;
+	}
+	
+	uint8_t rcv_buf[MAX_BUF_SIZE];
 	
 	/* Recv the serialized buffer via RAW socket */
-	if (recvfrom(ifs->rsock,
-		     rcv_buf,
-		     1024,
-		     0,
-		     (struct sockaddr *)&ifs->addr[0],
-		     &sock_len) <= 0) {
+	if (recvfrom(ifs->rsock, rcv_buf, MAX_BUF_SIZE, 0, NULL, NULL) <= 0) {
 		perror("recvfrom()");
 		close(ifs->rsock);
 	}
 
-
 	size_t rcv_len = hip_deserialize_pdu(pdu, rcv_buf);
 
-	/* print_pdu(pdu); */
+	printf("Receiving PDU with content (size %zu) :\n", rcv_len);
+	print_pdu_content(pdu);
 
-	/* Get dst_mac_addr. and dst hip addr from the just received pdu */
+	if (strcmp(app_mode, "s") == 0) {
+		/* Server must greet the client back */
+		send_hip_packet(ifs, ifs->addr[0].sll_addr, pdu->ethhdr->src_mac,
+				ifs->local_hip_addr, pdu->hiphdr->src,
+				(const char *)pdu->sdu);
+	}
 	
-	/* send_hip_packet(struct ifs_data *ifs, ifs->addr[0].sll_addr, uint8_t *dst_mac_addr, uint8_t src_hip_addr, uint8_t dst_hip_addr, const char *sdu); */
-
-	
-
-
-	/* return rc; */
 	return 0;
 }
