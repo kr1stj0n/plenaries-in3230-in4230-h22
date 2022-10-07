@@ -163,35 +163,33 @@ int handle_hip_packet(struct ifs_data *ifs)
 	/* struct iovec        msgvec[3]; */
 	/* uint8_t             packet[256]; */
 	/* int                 rc; */
+	struct pdu *pdu = NULL;
+	uint8_t rcv_buf[1024];
 
-	/* /\* Point to frame header *\/ */
-	/* msgvec[0].iov_base = &frame_hdr; */
-	/* msgvec[0].iov_len  = sizeof(struct ether_frame); */
-
-	/* /\* Point to hello header *\/ */
-	/* msgvec[1].iov_base = &hello_hdr; */
-	/* msgvec[1].iov_len  = sizeof(struct hello_header); */
+	socklen_t sock_len = sizeof(struct sockaddr_ll);
 	
-	/* /\* Point to ping/pong packet *\/ */
-	/* msgvec[2].iov_base = (void *)packet; */
-	/* /\* We can read up to 256 characters. Who cares? PONG is only 5 bytes *\/ */
-	/* msgvec[2].iov_len  = 256; */
+	/* Recv the serialized buffer via RAW socket */
+	if (recvfrom(ifs->rsock,
+		     rcv_buf,
+		     1024,
+		     0,
+		     (struct sockaddr *)&ifs->addr[0],
+		     &sock_len) <= 0) {
+		perror("recvfrom()");
+		close(ifs->rsock);
+	}
 
-	/* /\* Fill out message metadata struct *\/ */
-	/* msg.msg_name    = &so_name; */
-	/* msg.msg_namelen = sizeof(struct sockaddr_ll); */
-	/* msg.msg_iovlen  = 3; */
-	/* msg.msg_iov     = msgvec; */
 
-	/* rc = recvmsg(ifs->rsock, &msg, 0); */
-	/* if (rc <= 0) { */
-	/* 	perror("sendmsg"); */
-	/* 	return -1; */
-	/* } */
+	size_t rcv_len = hip_deserialize_pdu(pdu, rcv_buf);
 
-	/* printf("<info>: We got a MIP pkt. with content '%s' from node %d with MAC addr.: ", */
-	/*        (char *)packet, hello_hdr.src); */
-	/* print_mac_addr(frame_hdr.src_addr, 6); */
+	/* print_pdu(pdu); */
+
+	/* Get dst_mac_addr. and dst hip addr from the just received pdu */
+	
+	/* send_hip_packet(struct ifs_data *ifs, ifs->addr[0].sll_addr, uint8_t *dst_mac_addr, uint8_t src_hip_addr, uint8_t dst_hip_addr, const char *sdu); */
+
+	
+
 
 	/* return rc; */
 	return 0;

@@ -3,6 +3,8 @@
 #include <stdint.h>
 #include <arpa/inet.h>
 
+#include "ether.h"
+#include "hip.h"
 #include "pdu.h"
 
 struct pdu * alloc_pdu(void)
@@ -88,31 +90,34 @@ size_t hip_serialize_pdu(struct pdu *pdu, uint8_t *snd_buf)
 	return snd_len;
 }
 
-size_t hip_deserialize_pdu(struct pdu *pdu, uint8_t *recvbuf)
+size_t hip_deserialize_pdu(struct pdu *pdu, uint8_t *rcv_buf)
 {
-	/* *pdu = malloc(sizeof(struct pdu)); */
+	pdu = (struct pdu *)malloc(sizeof(struct pdu));
 
-	/* size_t recvlen = 0; */
-	/* (*pdu)->ethhdr = malloc(ETHHDR_SIZE); */
-	/* memcpy((*pdu)->ethhdr, recvbuf + recvlen, ETHHDR_SIZE); */
-	/* recvlen += ETHHDR_SIZE; */
+	size_t rcv_len = 0;
 
-	/* (*pdu)->hiphdr = malloc(MIPHDR_SIZE); */
-	/* uint32_t *tmp = (uint32_t *) (recvbuf + recvlen); */
-	/* uint32_t header = ntohl(*tmp); */
-	/* (*pdu)->hiphdr->dst = (uint8_t) (header >> 24); */
-	/* (*pdu)->hiphdr->src = (uint8_t) (header >> 16); */
-	/* (*pdu)->hiphdr->ttl = (uint8_t) ((header >> 12) & 0xf); */
-	/* (*pdu)->hiphdr->len = (size_t) (((header >> 3) & 0x1ff) * 4); */
-	/* (*pdu)->hiphdr->type = (uint8_t) (header & 0x7); */
-	/* recvlen += MIPHDR_SIZE; */
+	/* Unpack ethernet header */
+	pdu->ethhdr = (struct eth_hdr *)malloc(ETH_HDR_LEN);
+	memcpy(pdu->ethhdr, rcv_buf + rcv_len, ETH_HDR_LEN);
+	rcv_len += ETH_HDR_LEN;
 
-	/* (*pdu)->sdu = malloc((*pdu)->miphdr->len); */
-	/* memcpy((*pdu)->sdu, recvbuf + recvlen, (*pdu)->miphdr->len); */
-	/* recvlen += (*pdu)->miphdr->len; */
+	
 
-	/* return recvlen; */
-	return 0;
+	pdu->hiphdr = (struct hip_hdr *)malloc(HIP_HDR_LEN);
+	uint32_t *tmp = (uint32_t *) (rcv_buf + rcv_len);
+	uint32_t header = ntohl(*tmp);
+	pdu->hiphdr->dst = (uint8_t) (header >> 24);
+	pdu->hiphdr->src = (uint8_t) (header >> 16);
+	pdu->hiphdr->version = (uint8_t) ((header >> 12) & 0xf);
+	pdu->hiphdr->len = (size_t) (((header >> 4) & 0xff));
+	pdu->hiphdr->type = (uint8_t) (header & 0xf);
+	rcv_len += HIP_HDR_LEN;
+		
+	pdu->sdu = (uint8_t *) calloc(1, pdu->hiphdr->len * 4);
+	memcpy(pdu->sdu, rcv_buf + rcv_len, pdu->hiphdr->len);
+	rcv_len += pdu->hiphdr->len;
+
+	return rcv_len;
 }
 
 

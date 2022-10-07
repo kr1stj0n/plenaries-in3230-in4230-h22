@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -I include -Wall -Werror
+CFLAGS = -I include -Wall
 
 src = $(wildcard src/*.c)
 obj = $(patsubst src/%.c, build/%.o, $(src))
