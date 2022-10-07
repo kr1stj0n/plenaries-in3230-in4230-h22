@@ -11,6 +11,14 @@ Check the code
 [here](https://github.com/kr1stj0n/plenaries-in3230-in4230-h22/tree/main/p4_07-10-2022/ping-pong)
 and feel free to adapt it for the Oblig.  
 
+We also implemented a simple Greeting Protocol called HiP - Hi Protocol.
+HiP serializes data in a buffer and sends it over the RAW socket.  
+
+Check the HiP code
+[here](https://github.com/kr1stj0n/plenaries-in3230-in4230-h22/tree/main/p4_07-10-2022/hip)
+and feel free to adapt it for the Home Exams.  
+
+
 **NOTE:** These examples that we are coding in these plenaries are very simple,
 and do not follow the best coding practises. Most of the time we hardcode stuff
 for the sake of simplicity. Make sure to write clean and efficient code in C,
@@ -18,8 +26,5 @@ with proper functions and better comments.
 
 In this session we used `sendmsg()` / `recvmsg()` to send the data encapsulated
 in a msg header. Another path that you can follow while working with the Home
-Exams is to serialize / deserialize structure inside byte arrays. We didn't have
-time to talk about this, but feel free to explore more this approach on your own.  
-
-Here is a good start:  
-<https://www.includehelp.com/c/how-to-copy-complete-structure-in-a-byte-array-character-buffer-in-c%20language.aspx>
+Exams is to serialize / deserialize structure inside byte arrays. This is the
+approach that HiP follows.  
