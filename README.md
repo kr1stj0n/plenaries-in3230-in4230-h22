@@ -1,9 +1,9 @@
 # The Git repository of IN3230/IN4230 - Høst 2022 course at IFI-UiO #
 
-This is the main repository of the Plenaries of IN3230/4230 - Høst 2022 course at the
-University of Oslo.
-In this repository we will post short summaries of the sessions and share the
-code examples live coded and discussed during the sessions.
+This is the main repository of the Plenaries of IN3230/4230 - Høst 2022 course
+at the University of Oslo. In this repository we will post short summaries of
+the sessions and share the code examples live coded and discussed during the
+sessions.
 
 ## Sessions ##
 
@@ -11,7 +11,8 @@ code examples live coded and discussed during the sessions.
   2. Plenary 2: [p2_23-09-2022](p2_23-09-2022/)
   3. Plenary 3: [p3_30-09-2022](p3_30-09-2022/)
   4. Plenary 4: [p4_07-10-2022](p4_07-10-2022/)
-  5. 
+  5. Plenary 5: [p5_14-10-2022](p5_14-10-2022/)
+  6. 
 
 ## Info ##
 
