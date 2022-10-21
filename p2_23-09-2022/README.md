@@ -88,11 +88,11 @@ daemon.
 
 ## Next plenary ##
 
-If today's plenary might have been a bit confusing for some of you due to new
-the new concepts, fear not nor be discouraged. In the next plenary session, we
-will code a simple implementation of MIP-ARP using RAW socket, that helps three
-nodes (A --- B --- C) to get to know each other. MIP-ARP is a crucial part of
-the MIP daemon of Home Exam 1. Meanwhile, consider to check
+If today's plenary might have been a bit confusing for some of you due to the
+new concepts, fear not nor be discouraged. In the next plenary session, we will
+code a simple implementation of MIP-ARP using RAW socket, that helps three nodes
+(A --- B --- C) to get to know each other. MIP-ARP is a crucial part of the MIP
+daemon of Home Exam 1. Meanwhile, consider to check
 <https://beej.us/guide/bgnet/>, which is a good resource about socket
 programming in C.</br>
 </br>
