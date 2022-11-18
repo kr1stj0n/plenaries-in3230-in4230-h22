@@ -1,4 +1,4 @@
-# 7th plenary session: 28.10.2021 #
+# 7th plenary session: 28.10.2022 #
 
 In this plenary session we focused on the following topics:
 
