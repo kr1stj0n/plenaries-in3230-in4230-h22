@@ -15,7 +15,7 @@ BIRD [here](https://bird.network.cz/).
 Using
 [this](https://github.com/kr1stj0n/plenaries-in3230-in4230-h22/blob/main/p8_18-11-2022/init_mn.py)
 mininet script, we build a BIRD topology as shown in
-[this](https://github.com/kr1stj0n/plenaries-in3230-in4230-h22/blob/main/p8_18-11-2022/bird_topology.png)
+[this](https://github.com/kr1stj0n/plenaries-in3230-in4230-h22/blob/main/p8_18-11-2022/bird_topology.pdf)
 figure.  
 
 ### Installation ###
